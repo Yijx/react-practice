@@ -44,7 +44,13 @@ class App extends Component {
   }
   getItem = () => {
     return  this.state.list.map((item, index) => {
-      return (<Item content={ item } index={ index } deleteItem={ this.deleteItem } key={ index }/>)
+      let props = {
+        content: item,
+        index,
+        deleteItem: this.deleteItem,
+        key: index
+      }
+      return (<Item {...props}/>)
     })
   }
   render() {
