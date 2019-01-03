@@ -6,11 +6,17 @@ class Item extends Component {
     const { deleteItem, index } = this.props
     deleteItem(index)
   }
+  // 性能优化 父组件更新时执行render子组件同样执行父组件的操作
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.content === this.props.content) {
+      return false
+    }
+  }
   render () {
     return (
       <li 
         onClick={ this.deleteItem }             
-        >{ this.props.content + this.props.test}</li>
+        >{ this.props.content + this.props.test }</li>
     )
   }
 }

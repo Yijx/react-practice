@@ -1,6 +1,8 @@
 /* eslint-disable react/no-danger-with-children */
 import React, { Component, Fragment } from 'react';
 import Item from './components/item'
+import { CSSTransition } from 'react-transition-group'
+import './App.css'
 
 class App extends Component {
   constructor(props) {
@@ -8,7 +10,8 @@ class App extends Component {
     // 构造函数是唯一能够初始化 this.state 的地方
     this.state = {
       inputValue: '',
-      list: [1, 2, 3]
+      list: [1, 2, 3],
+      show: true
     }
   }
   componentWillMount() {
@@ -29,8 +32,8 @@ class App extends Component {
       }
     })
   }
-  changeValue = (e) => {
-    let inputValue = e.target.value
+  changeValue = () => {
+    let inputValue = this.input.value
     this.setState(() => ({
       inputValue
     }))
@@ -53,13 +56,31 @@ class App extends Component {
       return (<Item {...props}/>)
     })
   }
+  togger = () => {
+    this.setState((prevState) => ({
+      show: !prevState.show
+    }))
+  }
   render() {
+    let props = {
+      in: this.state.show,
+      timeout: 1000, // 动画执行时长
+      classNames: 'fade', // css前缀
+      unmountOnExit: true, // 消失时移除组件
+      onEntered: (el) => el.style.color = 'red',
+      appera: true, // 
+    }
     return (
       <Fragment>
-        <label htmlFor="input">输入内容</label>
-        <input type="text" id="input" value={ this.state.inputValue } onChange={ this.changeValue }/>
-        <button onClick={ this.submit }>确定</button>
-        { this.getItem() }
+        <button onClick={ this.togger }>togger</button>
+        <CSSTransition {...props}>
+          <div>
+            <label htmlFor="input">输入内容</label>
+            <input type="text" id="input" value={ this.state.inputValue } onChange={ this.changeValue } ref={ (input) => this.input = input }/>
+            <button onClick={ this.submit }>确定</button>
+            { this.getItem() }
+          </div>
+        </CSSTransition>
       </Fragment>
     );
   }
