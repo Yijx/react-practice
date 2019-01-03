@@ -1,7 +1,7 @@
 /* eslint-disable react/no-danger-with-children */
 import React, { Component, Fragment } from 'react';
 import Item from './components/item'
-import { CSSTransition } from 'react-transition-group'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import './App.css'
 
 class App extends Component {
@@ -48,12 +48,24 @@ class App extends Component {
   getItem = () => {
     return  this.state.list.map((item, index) => {
       let props = {
-        content: item,
-        index,
-        deleteItem: this.deleteItem,
+        // in: this.state.show, 
+        timeout: 1000, // 动画执行时长
+        classNames: 'fade', // css前缀
+        unmountOnExit: true, // 消失时移除组件
+        onEntered: (el) => el.style.color = 'red',
+        appear: true, // 第一次显示时就渲染
         key: index
       }
-      return (<Item {...props}/>)
+      let propsItem = {
+        content: item,
+        index,
+        deleteItem: this.deleteItem
+      }
+      return (
+        <CSSTransition {...props}>
+          <Item {...propsItem}/>
+        </CSSTransition>
+      )
     })
   }
   togger = () => {
@@ -62,25 +74,15 @@ class App extends Component {
     }))
   }
   render() {
-    let props = {
-      in: this.state.show,
-      timeout: 1000, // 动画执行时长
-      classNames: 'fade', // css前缀
-      unmountOnExit: true, // 消失时移除组件
-      onEntered: (el) => el.style.color = 'red',
-      appera: true, // 
-    }
     return (
       <Fragment>
-        <button onClick={ this.togger }>togger</button>
-        <CSSTransition {...props}>
-          <div>
-            <label htmlFor="input">输入内容</label>
-            <input type="text" id="input" value={ this.state.inputValue } onChange={ this.changeValue } ref={ (input) => this.input = input }/>
-            <button onClick={ this.submit }>确定</button>
-            { this.getItem() }
-          </div>
-        </CSSTransition>
+        {/* <button onClick={ this.togger }>togger</button> */}
+        <label htmlFor="input">输入内容</label>
+        <input type="text" id="input" value={ this.state.inputValue } onChange={ this.changeValue } ref={ (input) => this.input = input }/>
+        <button onClick={ this.submit }>确定</button>
+        <TransitionGroup>
+          { this.getItem() }
+        </TransitionGroup>
       </Fragment>
     );
   }
