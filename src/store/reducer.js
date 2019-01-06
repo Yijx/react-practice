@@ -1,4 +1,4 @@
-import { CHANGE_VALUE, CHANGE_LIST, DELETE_VALUE } from './actionTypes'
+import { CHANGE_VALUE, CHANGE_LIST, DELETE_VALUE, INIT_LIST } from './actionTypes'
 
 const defaultState = {
   inputValue: '',
@@ -10,7 +10,6 @@ export default (state = defaultState, action) => {
   // 不允许修改显示state
   let newState = JSON.parse(JSON.stringify(state))
   let { type, value } = action
-
   switch (type) {
     case CHANGE_VALUE:
       newState.inputValue = value
@@ -21,6 +20,9 @@ export default (state = defaultState, action) => {
       break
     case DELETE_VALUE:
       newState.list.splice(value, 1)
+      break
+    case INIT_LIST:
+      newState.list = value
       break
     default:
   }
